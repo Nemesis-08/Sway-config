@@ -31,14 +31,13 @@
 
     // ── LEFT ─────────────────────────────────────────────────────────────────
 
-    // Wallpaper selector placeholder — triggers your wallpaper tool
+    //triggers your wallpaper tool (waypaper)
     "custom/wallpaper": {
         "format": "󰸉",
         "tooltip": false,
         "on-click": "waypaper"
     },
 
-    // SystemMonitor: showCpuTemp=true → temperature module
     "temperature": {
         "thermal-zone": 0,              // adjust to your zone (check: ls /sys/class/thermal/)
         "critical-threshold": 90,       // cpuCriticalThreshold
@@ -48,7 +47,6 @@
         "tooltip": false
     },
 
-    // SystemMonitor: showMemoryUsage=true, showMemoryAsPercent=false
     "memory": {
         "interval": 5,
         "format": "󰍛 {used:0.1f}G",     // raw GiB, matching showMemoryAsPercent=false
@@ -57,7 +55,6 @@
         "critical": 90
     },
 
-    // MediaMini: compactMode=true, scrollingMode=hover, showVisualizer=true
     "mpris": {
         "format": "{player_icon} {dynamic}",
         "format-paused": "{player_icon} {dynamic}",
@@ -77,7 +74,6 @@
 
     // ── CENTER ───────────────────────────────────────────────────────────────
 
-    // Workspace: focusedColor=primary, occupiedColor=secondary, hideUnoccupied=false
     "sway/workspaces": {
         "disable-scroll": false,
         "all-outputs": false,
@@ -89,7 +85,7 @@
 
     // ── RIGHT ────────────────────────────────────────────────────────────────
 
-    // Clock: format "ddd d h:mm AP" → strftime equivalent, custom font
+    // Clock: format "ddd d h:mm AP"
     "clock": {
         "format": "{:%a %e %I:%M %p}",    // Mon 28 07:45 PM  (%e = space-padded day)
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
@@ -99,14 +95,14 @@
         }
     },
 
-    // Tray: drawerEnabled=true, hidePassive=false
+    // Tray
     "tray": {
         "spacing": 6,
         "show-passive-items": true,
         "icon-size": 16
     },
 
-    // NotificationHistory — requires swaync; showUnreadBadge=true
+    // NotificationHistory
     "custom/swaync": {
         "tooltip": false,
         "format": "{icon}",
@@ -128,7 +124,7 @@
         "escape": true
     },
 
-    // Brightness: displayMode=alwaysShow
+    // Brightness
     "backlight": {
         "device": "intel_backlight",    // adjust to your device (ls /sys/class/backlight/)
         "format": "{icon} {percent}%",
@@ -155,7 +151,7 @@
         "on-click": "nm-connection-editor"
     },
 
-    // Bluetooth — install blueman: sudo pacman -S blueman  |  sudo apt install blueman
+    // Bluetooth
     "bluetooth": {
         "format": "󰂯",
         "format-connected": "󰂱 {num_connections}",
@@ -165,7 +161,7 @@
         "on-click": "blueman-manager"
     },
 
-    // Volume: displayMode=alwaysShow, middleClickCommand=pwvucontrol
+    // Volume
     "wireplumber": {
         "format": "{icon} {volume}%",
         "format-muted": "󰝟",

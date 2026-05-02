@@ -1,0 +1,309 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# Sway config — seamlessly ported from Niri (CachyOS)
+# Sources: input.kdl · keybinds.kdl · layout.kdl · misc.kdl · rules.kdl
+#          display.kdl · autostart.kdl
+# ══════════════════════════════════════════════════════════════════════════════
+
+### Variables ──────────────────────────────────────────────────────────────────
+set $mod        Mod4
+set $term       alacritty
+set $menu       rofi -show drun -show-icons    # Mod+Space (user specified)
+set $browser    firefox
+set $files      nautilus
+set $lock       swaylock -f -c 000000
+set $logout     wlogout                         # replaces noctalia sessionMenu
+
+# Vim-style directional keys (matches niri: A/H=left, D/L=right, K=up, J=down)
+set $left   h
+set $right  l
+set $up     k
+set $down   j
+
+### Output ─────────────────────────────────────────────────────────────────────
+# Wallpaper — restored via waypaper (dir: ~/Pictures/Wallpapers from noctalia)
+exec_always waypaper --restore
+
+# Uncomment and adjust for your display (from display.kdl):
+# output DP-1 {
+#     resolution 2560x1440@360Hz
+#     scale 1
+# }
+
+### Environment ────────────────────────────────────────────────────────────────
+# Ported from misc.kdl environment {} block
+exec dbus-update-activation-environment --systemd \
+    DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
+
+exec systemctl --user import-environment \
+    DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+
+# Qt / Electron Wayland compat (misc.kdl)
+exec_always {
+    systemctl --user set-environment ELECTRON_OZONE_PLATFORM_HINT=auto
+    systemctl --user set-environment QT_QPA_PLATFORM=wayland
+    systemctl --user set-environment QT_QPA_PLATFORMTHEME=gtk3
+    systemctl --user set-environment QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+}
+
+### Input ──────────────────────────────────────────────────────────────────────
+# Ported from input.kdl
+
+input type:touchpad {
+    tap enabled                         # tap-to-click
+    natural_scroll disabled
+    dwt enabled
+}
+
+input type:mouse {
+    accel_profile flat                  # accel-profile "flat"
+    pointer_accel 1.0                   # accel-speed 1.0
+}
+
+input type:keyboard {
+    xkb_layout us
+    repeat_delay 300
+    repeat_rate 50
+}
+
+# workspace-auto-back-and-forth from input.kdl
+workspace_auto_back_and_forth yes
+
+# focus-follows-mouse is commented out in niri — keeping it off
+# focus_follows_mouse yes
+
+### Cursor ─────────────────────────────────────────────────────────────────────
+# cursor { xcursor-theme "capitaine-cursors" } from misc.kdl
+seat * xcursor_theme capitaine-cursors 24
+seat * hide_cursor 3000
+
+### Appearance ─────────────────────────────────────────────────────────────────
+# prefer-no-csd → no title bars, pixel border
+default_border          pixel 1
+default_floating_border pixel 1
+hide_edge_borders       smart
+title_align             center
+
+# gaps 5 from layout.kdl
+gaps inner 3
+gaps outer 2
+
+# focus-ring colors from layout.kdl:
+#   active-color   "#f93d0e"
+#   inactive-color "#6c008a"
+#   urgent-color   "#9b0000"
+# sway format: border  background  text  indicator  child_border
+client.focused          #f93d0e #f93d0e #ffffff #f93d0e #f93d0e
+client.unfocused        #6c008a #000000 #888888 #6c008a #6c008a
+client.focused_inactive #6c008a #090504 #888888 #6c008a #6c008a
+client.urgent           #9b0000 #9b0000 #ffffff #9b0000 #9b0000
+client.background       #000000
+
+### Autostart ──────────────────────────────────────────────────────────────────
+exec_always waybar
+exec_always nm-applet --indicator
+exec_always blueman-applet
+# Notification daemon — install swaync: yay -S swaync
+exec_always swaync
+
+### Window Rules ─────────────────────────────────────────────────────────────── 
+
+# Float common dialogs
+for_window [window_role="pop-up"]      floating enable
+for_window [window_role="bubble"]      floating enable
+for_window [window_type="dialog"]      floating enable
+for_window [window_type="menu"]        floating enable
+for_window [app_id="nm-connection-editor"] floating enable
+for_window [app_id="blueman-manager"] floating enable
+for_window [app_id="pavucontrol"]     floating enable
+for_window [app_id="pwvucontrol"]     floating enable
+
+### Key Bindings ───────────────────────────────────────────────────────────────
+
+# ─── Applications ─────────────────────────────────────────────────────────────
+# keybinds.kdl: Mod+T → alacritty
+bindsym $mod+t          exec $term
+
+# Mod+Space → rofi (user specified; was noctalia launcher)
+bindsym $mod+space      exec $menu
+
+# Mod+B → firefox
+bindsym $mod+b          exec $browser
+
+# Mod+E → nautilus
+bindsym $mod+e          exec $files
+
+# ─── Session ──────────────────────────────────────────────────────────────────
+# Mod+Alt+L → lock (was noctalia lockScreen)
+bindsym $mod+Mod1+l     exec $lock
+
+# Mod+Shift+Q / Mod+P → session menu (was noctalia sessionMenu)
+bindsym $mod+shift+q    exec $logout
+bindsym $mod+p          exec $logout
+
+# Mod+Shift+P → power off monitors (OLED/privacy)
+bindsym $mod+shift+p    exec swaymsg "output * power off"
+
+# Ctrl+Alt+Delete → exit sway (was quit in niri)
+bindsym ctrl+alt+Delete exec swaymsg exit
+
+# Mod+Shift+C → reload config
+bindsym $mod+shift+c    reload
+
+# ─── Window: Close ────────────────────────────────────────────────────────────
+# Mod+Q → close-window
+bindsym $mod+q          kill
+
+# ─── Window: Focus ────────────────────────────────────────────────────────────
+# Mod+A / Mod+H → focus-column-left
+bindsym $mod+h          focus left
+bindsym $mod+a          focus left
+bindsym $mod+Left       focus left
+
+# Mod+D / Mod+L → focus-column-right
+bindsym $mod+l          focus right
+bindsym $mod+d          focus right
+bindsym $mod+Right      focus right
+
+# Mod+K / Mod+Up → focus-window-up
+bindsym $mod+k          focus up
+bindsym $mod+Up         focus up
+
+# Mod+J / Mod+Down → focus-window-down
+bindsym $mod+j          focus down
+bindsym $mod+Down       focus down
+
+# ─── Window: Move ─────────────────────────────────────────────────────────────
+# Mod+Ctrl+A / Mod+Ctrl+H → move-column-left
+bindsym $mod+ctrl+h     move left
+bindsym $mod+ctrl+a     move left
+bindsym $mod+ctrl+Left  move left
+
+# Mod+Ctrl+D / Mod+Ctrl+L → move-column-right
+bindsym $mod+ctrl+l     move right
+bindsym $mod+ctrl+d     move right
+bindsym $mod+ctrl+Right move right
+
+# Mod+Ctrl+K / Mod+Ctrl+Up → move-window-up
+bindsym $mod+ctrl+k     move up
+bindsym $mod+ctrl+Up    move up
+
+# Mod+Ctrl+J / Mod+Ctrl+Down → move-window-down
+bindsym $mod+ctrl+j     move down
+bindsym $mod+ctrl+Down  move down
+
+# ─── Monitor: Focus ───────────────────────────────────────────────────────────
+# Mod+Shift+Arrow → focus-monitor-*
+bindsym $mod+shift+Left    focus output left
+bindsym $mod+shift+Right   focus output right
+bindsym $mod+shift+Up      focus output up
+bindsym $mod+shift+Down    focus output down
+
+# ─── Monitor: Move ────────────────────────────────────────────────────────────
+# Mod+Shift+Ctrl+Arrow → move-column-to-monitor-*
+bindsym $mod+shift+ctrl+Left    move container to output left
+bindsym $mod+shift+ctrl+Right   move container to output right
+bindsym $mod+shift+ctrl+Up      move container to output up
+bindsym $mod+shift+ctrl+Down    move container to output down
+
+# ─── Workspaces: Switch ───────────────────────────────────────────────────────
+bindsym $mod+1  workspace number 1
+bindsym $mod+2  workspace number 2
+bindsym $mod+3  workspace number 3
+bindsym $mod+4  workspace number 4
+bindsym $mod+5  workspace number 5
+bindsym $mod+6  workspace number 6
+bindsym $mod+7  workspace number 7
+bindsym $mod+8  workspace number 8
+bindsym $mod+9  workspace number 9
+
+# Mod+Tab → focus-workspace-previous (workspace-auto-back-and-forth covers this too)
+bindsym $mod+Tab    workspace back_and_forth
+
+# Mod+Wheel → focus-workspace-down/up
+bindsym --whole-window $mod+button5   workspace next
+bindsym --whole-window $mod+button4   workspace prev
+
+# ─── Workspaces: Move Container ───────────────────────────────────────────────
+bindsym $mod+ctrl+1  move container to workspace number 1
+bindsym $mod+ctrl+2  move container to workspace number 2
+bindsym $mod+ctrl+3  move container to workspace number 3
+bindsym $mod+ctrl+4  move container to workspace number 4
+bindsym $mod+ctrl+5  move container to workspace number 5
+bindsym $mod+ctrl+6  move container to workspace number 6
+bindsym $mod+ctrl+7  move container to workspace number 7
+bindsym $mod+ctrl+8  move container to workspace number 8
+bindsym $mod+ctrl+9  move container to workspace number 9
+
+# Mod+Ctrl+Wheel → move-column-to-workspace-down/up
+bindsym --whole-window $mod+ctrl+button5  move container to workspace next; workspace next
+bindsym --whole-window $mod+ctrl+button4  move container to workspace prev; workspace prev
+
+
+# ─── Layout ───────────────────────────────────────────────────────────────────
+# Mod+Return → toggle-window-floating (niri keybind — NOT terminal)
+bindsym $mod+Return         floating toggle
+floating_modifier $mod normal
+
+# Mod+F → maximize-column / fullscreen (closest sway equiv)
+bindsym $mod+f              fullscreen toggle
+
+# Mod+W → toggle-column-tabbed-display
+bindsym $mod+w              layout tabbed
+
+# Split helpers
+bindsym $mod+v              splitv
+bindsym $mod+shift+b        splith
+
+# Mod+C → center-column (floating: center on screen; tiling: no-op gracefully)
+bindsym $mod+c              move position center
+
+# Mod+Ctrl+F → expand-column-to-available-width → fill horizontal
+bindsym $mod+ctrl+f         resize set width 100ppt
+
+# ─── Resize (inline — Mod+Minus/Equal, matches niri set-column-width ±10%) ────
+bindsym $mod+minus          resize shrink width  10px
+bindsym $mod+equal          resize grow   width  10px
+bindsym $mod+shift+minus    resize shrink height 10px
+bindsym $mod+shift+equal    resize grow   height 10px
+
+# ─── Resize Mode (fine control with Mod+R) ────────────────────────────────────
+mode "resize" {
+    bindsym $left   resize shrink width  10px
+    bindsym $right  resize grow   width  10px
+    bindsym $up     resize shrink height 10px
+    bindsym $down   resize grow   height 10px
+
+    bindsym Left    resize shrink width  10px
+    bindsym Right   resize grow   width  10px
+    bindsym Up      resize shrink height 10px
+    bindsym Down    resize grow   height 10px
+
+    bindsym Return  mode "default"
+    bindsym Escape  mode "default"
+}
+bindsym $mod+r  mode "resize"
+
+# ─── Screenshots ──────────────────────────────────────────────────────────────
+bindsym ctrl+shift+1    exec flameshot gui
+# ─── Media Controls ───────────────────────────────────────────────────────────
+# Volume (using wpctl to match wireplumber in waybar)
+bindsym --locked XF86AudioRaiseVolume  exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+bindsym --locked XF86AudioLowerVolume  exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym --locked XF86AudioMute         exec wpctl set-mute   @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioMicMute      exec wpctl set-mute   @DEFAULT_AUDIO_SOURCE@ toggle
+
+# Media playback (playerctl)
+bindsym --locked XF86AudioNext         exec playerctl next
+bindsym --locked XF86AudioPrev         exec playerctl previous
+bindsym --locked XF86AudioPlay         exec playerctl play-pause
+bindsym --locked XF86AudioPause        exec playerctl play-pause
+
+# ─── Brightness ───────────────────────────────────────────────────────────────
+bindsym --locked XF86MonBrightnessUp   exec brightnessctl set 5%+
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+
+### Bar ────────────────────────────────────────────────────────────────────────
+# Using Waybar (configured separately in ~/.config/waybar/)
+# The default sway bar is disabled.
+
+include /etc/sway/config.d/*

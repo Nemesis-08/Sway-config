@@ -1,0 +1,179 @@
+
+{
+    "position": "top",
+    "height": 30,
+    "margin-top": 0,
+    "margin-left": 4,
+    "margin-right": 4,
+    "spacing": 0,
+
+    "modules-left": [
+        "custom/wallpaper",
+        "temperature",
+        "memory",
+        "mpris"
+    ],
+
+    "modules-center": [
+        "sway/workspaces"
+    ],
+
+    "modules-right": [
+        "clock",
+        "tray",
+        "custom/swaync",
+        "custom/screenshot",
+        "network",
+        "backlight",
+        "bluetooth",
+        "wireplumber"
+    ],
+
+    // ── LEFT ─────────────────────────────────────────────────────────────────
+
+    // Wallpaper selector placeholder — triggers your wallpaper tool
+    "custom/wallpaper": {
+        "format": "󰸉",
+        "tooltip": false,
+        "on-click": "waypaper"
+    },
+
+    // SystemMonitor: showCpuTemp=true → temperature module
+    "temperature": {
+        "thermal-zone": 0,              // adjust to your zone (check: ls /sys/class/thermal/)
+        "critical-threshold": 90,       // cpuCriticalThreshold
+        "warning-threshold": 80,        // cpuWarningThreshold
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": ["", "", "", "", ""],
+        "tooltip": false
+    },
+
+    // SystemMonitor: showMemoryUsage=true, showMemoryAsPercent=false
+    "memory": {
+        "interval": 5,
+        "format": "󰍛 {used:0.1f}G",     // raw GiB, matching showMemoryAsPercent=false
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
+        "warning": 80,
+        "critical": 90
+    },
+
+    // MediaMini: compactMode=true, scrollingMode=hover, showVisualizer=true
+    "mpris": {
+        "format": "{player_icon} {dynamic}",
+        "format-paused": "{player_icon} {dynamic}",
+        "player-icons": {
+            "default": "▶",
+            "mpv": "🎵"
+        },
+        "status-icons": {
+            "paused": "⏸"
+        },
+        "dynamic-len": 30,
+        "dynamic-order": ["title", "artist"],
+        "tooltip-format": "{title} — {artist}\n{album}",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous"
+    },
+
+    // ── CENTER ───────────────────────────────────────────────────────────────
+
+    // Workspace: focusedColor=primary, occupiedColor=secondary, hideUnoccupied=false
+    "sway/workspaces": {
+        "disable-scroll": false,
+        "all-outputs": false,
+        "format": "{name}",
+        "disable-markup": false,
+        "enable-bar-scroll": true,
+        "smooth-scrolling-threshold": 1
+    },
+
+    // ── RIGHT ────────────────────────────────────────────────────────────────
+
+    // Clock: format "ddd d h:mm AP" → strftime equivalent, custom font
+    "clock": {
+        "format": "{:%a %e %I:%M %p}",    // Mon 28 07:45 PM  (%e = space-padded day)
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "right"
+        }
+    },
+
+    // Tray: drawerEnabled=true, hidePassive=false
+    "tray": {
+        "spacing": 6,
+        "show-passive-items": true,
+        "icon-size": 16
+    },
+
+    // NotificationHistory — requires swaync; showUnreadBadge=true
+    "custom/swaync": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "󰂚",
+            "none": "󰂜",
+            "dnd-notification": "󰂛",
+            "dnd-none": "󰪑",
+            "inhibited-notification": "󰂛",
+            "inhibited-none": "󰂜",
+            "dnd-inhibited-notification": "󰂛",
+            "dnd-inhibited-none": "󰪑"
+        },
+        "return-type": "json",
+        "exec": "swaync-client -swb 2>/dev/null",
+        "exec-if": "command -v swaync-client",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+
+    // Brightness: displayMode=alwaysShow
+    "backlight": {
+        "device": "intel_backlight",    // adjust to your device (ls /sys/class/backlight/)
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
+        "scroll-step": 5,               // brightnessStep=5
+        "tooltip": false
+    },
+
+    // Screenshot — flameshot
+    "custom/screenshot": {
+        "format": "󰹑",
+        "tooltip-format": "Click to capture",
+        "on-click": "flameshot gui"
+    },
+
+    "network": {
+        "format-wifi": "󰤨 {essid}",
+        "format-ethernet": "󰈀 {ipaddr}",
+        "format-disconnected": "󰤭",
+        "format-linked": "󰈀 (no IP)",
+        "tooltip-format-wifi": "{essid} — {signalStrength}%\n{ipaddr}",
+        "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
+        "tooltip-format-disconnected": "Disconnected",
+        "on-click": "nm-connection-editor"
+    },
+
+    // Bluetooth — install blueman: sudo pacman -S blueman  |  sudo apt install blueman
+    "bluetooth": {
+        "format": "󰂯",
+        "format-connected": "󰂱 {num_connections}",
+        "format-disabled": "󰂲",
+        "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+        "tooltip-format-connected": "{device_alias}\n{device_address}",
+        "on-click": "blueman-manager"
+    },
+
+    // Volume: displayMode=alwaysShow, middleClickCommand=pwvucontrol
+    "wireplumber": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟",
+        "format-icons": ["󰕿", "󰖀", "󰕾"],
+        "scroll-step": 5,               // volumeStep=5
+        "max-volume": 150,              // volumeOverdrive=true
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-click-middle": "pwvucontrol || pavucontrol",
+        "tooltip": true
+    }
+}

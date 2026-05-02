@@ -1,0 +1,235 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Waybar stylesheet — ported from Noctalia colors.json
+   GTK CSS: no custom properties, all colors inlined.
+
+   Palette reference:
+     mSurface:          #000000
+     mSurfaceVariant:   #090504
+     mPrimary:          #b54e49
+     mSecondary:        #964e24
+     mTertiary:         #ffffff
+     mOnSurface:        #ffffff
+     mOnSurfaceVariant: #ffffff
+     mOnPrimary:        #000000
+     mOnSecondary:      #000000
+     mOutline:          #d62800
+     mError:            #ffe1e5
+     mHover:            #9bfece
+     mOnHover:          #0e0e43
+   ══════════════════════════════════════════════════════════════════════════ */
+
+* {
+    font-family: "MesloLGSDZ Nerd Font Mono", "Symbols Nerd Font", monospace;
+    font-size: 13px;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+/* ── Bar ────────────────────────────────────────────────────────────────── */
+window#waybar {
+    background-color: rgba(0, 0, 0, 0.93);
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/* ── Generic module wrapper ─────────────────────────────────────────────── */
+.modules-left,
+.modules-center,
+.modules-right {
+    padding: 0 4px;
+}
+
+#custom-wallpaper,
+#temperature,
+#memory,
+#window,
+#mpris,
+#workspaces,
+#clock,
+#tray,
+#custom-swaync,
+#custom-screenshot,
+#network,
+#backlight,
+#bluetooth,
+#wireplumber {
+    background-color: transparent;
+    color: #ffffff;
+    padding: 0 8px;
+    margin: 2px 0;
+}
+
+/* ── Hover state ────────────────────────────────────────────────────────── */
+#custom-wallpaper:hover,
+#temperature:hover,
+#memory:hover,
+#window:hover,
+#mpris:hover,
+#clock:hover,
+#custom-swaync:hover,
+#custom-screenshot:hover,
+#network:hover,
+#backlight:hover,
+#bluetooth:hover,
+#wireplumber:hover {
+    background-color: #9bfece;
+    color: #0e0e43;
+    border-radius: 4px;
+    transition: all 150ms ease;
+}
+
+/* ── LEFT modules ───────────────────────────────────────────────────────── */
+
+#custom-wallpaper {
+    font-size: 16px;
+    color: #964e24;
+}
+
+#temperature {
+    color: #ffffff;
+}
+
+#temperature.critical {
+    color: #ffe1e5;
+    font-weight: bold;
+}
+
+#memory {
+    color: #ffffff;
+}
+
+#memory.critical {
+    color: #ffe1e5;
+    font-weight: bold;
+}
+
+#window {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+#mpris {
+    color: #964e24;
+}
+
+/* ── CENTER modules ─────────────────────────────────────────────────────── */
+
+#workspaces {
+    padding: 0 4px;
+}
+
+#workspaces button {
+    padding: 0 6px;
+    min-width: 18px;
+    background-color: black;
+    color: #ffffff;
+    border-radius: 0px;
+    font-weight: bold;
+    transition: all 150ms ease;
+}
+
+#workspaces button.active {
+    color: #000000;
+    background-color: #b54e49;
+    border-radius: 0px;
+}
+
+#workspaces button.empty {
+    color: #ffffff;
+    opacity: 0.4;
+}
+
+#workspaces button:hover {
+    background-color: #2b1e1c;
+    color: #0e0e43;
+}
+
+/* ── RIGHT modules ──────────────────────────────────────────────────────── */
+
+#clock {
+    color: #ffffff;
+}
+
+#tray {
+    padding: 0 6px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: #b54e49;
+    border-radius: 4px;
+}
+
+#custom-swaync {
+    color: #ffffff;
+}
+
+#custom-screenshot {
+    color: #ffffff;
+    font-size: 15px;
+}
+
+#custom-swaync.notification {
+    color: #b54e49;
+}
+
+#custom-swaync.dnd-notification,
+#custom-swaync.dnd-none {
+    color: #964e24;
+}
+
+#backlight {
+    color: #ffffff;
+}
+
+#network {
+    color: #ffffff;
+}
+
+#network.disconnected {
+    color: #d62800;
+}
+
+#bluetooth {
+    color: #ffffff;
+    opacity: 0.6;
+}
+
+#bluetooth.connected {
+    color: #b54e49;
+    opacity: 1;
+}
+
+#bluetooth.disabled {
+    opacity: 0.3;
+}
+
+#wireplumber {
+    color: #ffffff;
+}
+
+#wireplumber.muted {
+    color: #d62800;
+    opacity: 0.6;
+}
+
+/* ── Tooltips ───────────────────────────────────────────────────────────── */
+tooltip {
+    background-color: #090504;
+    border: 1px solid #d62800;
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+tooltip label {
+    color: #ffffff;
+}

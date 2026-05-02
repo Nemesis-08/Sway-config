@@ -1,43 +1,35 @@
-# ══════════════════════════════════════════════════════════════════════════════
-# Sway config — seamlessly ported from Niri (CachyOS)
-# Sources: input.kdl · keybinds.kdl · layout.kdl · misc.kdl · rules.kdl
-#          display.kdl · autostart.kdl
-# ══════════════════════════════════════════════════════════════════════════════
-
 ### Variables ──────────────────────────────────────────────────────────────────
 set $mod        Mod4
 set $term       alacritty
-set $menu       rofi -show drun -show-icons    # Mod+Space (user specified)
+set $menu       rofi -show drun -show-icons    # Mod+Space
 set $browser    firefox
 set $files      nautilus
 set $lock       swaylock -f -c 000000
-set $logout     wlogout                         # replaces noctalia sessionMenu
+set $logout     wlogout       
 
-# Vim-style directional keys (matches niri: A/H=left, D/L=right, K=up, J=down)
+# Vim-style directional keys A/H=left, D/L=right, K=up, J=down - u might wanna change this
 set $left   h
 set $right  l
 set $up     k
 set $down   j
 
 ### Output ─────────────────────────────────────────────────────────────────────
-# Wallpaper — restored via waypaper (dir: ~/Pictures/Wallpapers from noctalia)
 exec_always waypaper --restore
 
-# Uncomment and adjust for your display (from display.kdl):
+# Uncomment and adjust for your display
 # output DP-1 {
 #     resolution 2560x1440@360Hz
 #     scale 1
 # }
 
 ### Environment ────────────────────────────────────────────────────────────────
-# Ported from misc.kdl environment {} block
 exec dbus-update-activation-environment --systemd \
     DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
 
 exec systemctl --user import-environment \
     DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
 
-# Qt / Electron Wayland compat (misc.kdl)
+
 exec_always {
     systemctl --user set-environment ELECTRON_OZONE_PLATFORM_HINT=auto
     systemctl --user set-environment QT_QPA_PLATFORM=wayland
@@ -46,7 +38,7 @@ exec_always {
 }
 
 ### Input ──────────────────────────────────────────────────────────────────────
-# Ported from input.kdl
+
 
 input type:touchpad {
     tap enabled                         # tap-to-click
@@ -65,19 +57,15 @@ input type:keyboard {
     repeat_rate 50
 }
 
-# workspace-auto-back-and-forth from input.kdl
 workspace_auto_back_and_forth yes
 
-# focus-follows-mouse is commented out in niri — keeping it off
-# focus_follows_mouse yes
 
 ### Cursor ─────────────────────────────────────────────────────────────────────
-# cursor { xcursor-theme "capitaine-cursors" } from misc.kdl
 seat * xcursor_theme capitaine-cursors 24
 seat * hide_cursor 3000
 
 ### Appearance ─────────────────────────────────────────────────────────────────
-# prefer-no-csd → no title bars, pixel border
+# prefer-no-csd 
 default_border          pixel 1
 default_floating_border pixel 1
 hide_edge_borders       smart
@@ -102,7 +90,7 @@ client.background       #000000
 exec_always waybar
 exec_always nm-applet --indicator
 exec_always blueman-applet
-# Notification daemon — install swaync: yay -S swaync
+# Notification daemon — swaync
 exec_always swaync
 
 ### Window Rules ─────────────────────────────────────────────────────────────── 
@@ -123,7 +111,7 @@ for_window [app_id="pwvucontrol"]     floating enable
 # keybinds.kdl: Mod+T → alacritty
 bindsym $mod+t          exec $term
 
-# Mod+Space → rofi (user specified; was noctalia launcher)
+# Mod+Space → rofi
 bindsym $mod+space      exec $menu
 
 # Mod+B → firefox
@@ -133,17 +121,17 @@ bindsym $mod+b          exec $browser
 bindsym $mod+e          exec $files
 
 # ─── Session ──────────────────────────────────────────────────────────────────
-# Mod+Alt+L → lock (was noctalia lockScreen)
+# Mod+Alt+L → lock 
 bindsym $mod+Mod1+l     exec $lock
 
-# Mod+Shift+Q / Mod+P → session menu (was noctalia sessionMenu)
+# Mod+Shift+Q / Mod+P → session menu 
 bindsym $mod+shift+q    exec $logout
 bindsym $mod+p          exec $logout
 
 # Mod+Shift+P → power off monitors (OLED/privacy)
 bindsym $mod+shift+p    exec swaymsg "output * power off"
 
-# Ctrl+Alt+Delete → exit sway (was quit in niri)
+# Ctrl+Alt+Delete → exit sway 
 bindsym ctrl+alt+Delete exec swaymsg exit
 
 # Mod+Shift+C → reload config
@@ -216,7 +204,7 @@ bindsym $mod+7  workspace number 7
 bindsym $mod+8  workspace number 8
 bindsym $mod+9  workspace number 9
 
-# Mod+Tab → focus-workspace-previous (workspace-auto-back-and-forth covers this too)
+# Mod+Tab → focus-workspace-previous 
 bindsym $mod+Tab    workspace back_and_forth
 
 # Mod+Wheel → focus-workspace-down/up
@@ -240,7 +228,7 @@ bindsym --whole-window $mod+ctrl+button4  move container to workspace prev; work
 
 
 # ─── Layout ───────────────────────────────────────────────────────────────────
-# Mod+Return → toggle-window-floating (niri keybind — NOT terminal)
+# Mod+Return → toggle-window-floating 
 bindsym $mod+Return         floating toggle
 floating_modifier $mod normal
 
@@ -260,13 +248,13 @@ bindsym $mod+c              move position center
 # Mod+Ctrl+F → expand-column-to-available-width → fill horizontal
 bindsym $mod+ctrl+f         resize set width 100ppt
 
-# ─── Resize (inline — Mod+Minus/Equal, matches niri set-column-width ±10%) ────
+# ─── Resize ────
 bindsym $mod+minus          resize shrink width  10px
 bindsym $mod+equal          resize grow   width  10px
 bindsym $mod+shift+minus    resize shrink height 10px
 bindsym $mod+shift+equal    resize grow   height 10px
 
-# ─── Resize Mode (fine control with Mod+R) ────────────────────────────────────
+# ─── Resize Mode ────────────────────────────────────
 mode "resize" {
     bindsym $left   resize shrink width  10px
     bindsym $right  resize grow   width  10px
@@ -301,9 +289,5 @@ bindsym --locked XF86AudioPause        exec playerctl play-pause
 # ─── Brightness ───────────────────────────────────────────────────────────────
 bindsym --locked XF86MonBrightnessUp   exec brightnessctl set 5%+
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-
-### Bar ────────────────────────────────────────────────────────────────────────
-# Using Waybar (configured separately in ~/.config/waybar/)
-# The default sway bar is disabled.
 
 include /etc/sway/config.d/*
